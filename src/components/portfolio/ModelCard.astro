@@ -21,7 +21,7 @@ const { entry, index, featured = false } = Astro.props;
         src={entry.data.cover.image}
         alt={entry.data.cover.alt}
         widths={[480, 768, 1200]}
-        sizes={featured ? "(max-width: 768px) 100vw, 1200px" : "(max-width: 768px) 100vw, 600px"}
+        sizes={featured ? "(max-width: 896px) 100vw, 800px" : "(max-width: 768px) 100vw, 600px"}
         loading={index === 0 ? "eager" : "lazy"}
       />
       <span>{entryTypeLabels[entry.data.entryType]}</span>
@@ -62,16 +62,23 @@ const { entry, index, featured = false } = Astro.props;
     border: 1px solid var(--color-line);
     border-radius: var(--radius-md);
     background: var(--color-surface);
+    aspect-ratio: 12 / 7;
+    transition: border-color var(--duration-fast) var(--ease-standard);
   }
 
   .model-card__visual :global(img) {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
     transition: transform 300ms var(--ease-standard);
   }
 
-  .model-card:hover .model-card__visual :global(img) {
-    transform: scale(1.015);
+  .model-card__link:hover .model-card__visual {
+    border-color: var(--color-brand);
+  }
+
+  .model-card__link:hover .model-card__visual :global(img) {
+    transform: scale(1.02);
   }
 
   .model-card__visual > span {
@@ -84,7 +91,7 @@ const { entry, index, featured = false } = Astro.props;
     background: var(--color-bg);
     color: var(--color-text-muted);
     font-family: var(--font-mono);
-    font-size: 0.625rem;
+    font-size: var(--text-xs);
     letter-spacing: 0.06em;
     text-transform: uppercase;
   }
@@ -132,5 +139,18 @@ const { entry, index, featured = false } = Astro.props;
 
   .model-card--featured h3 {
     font-size: var(--text-2xl);
+  }
+
+  /* Destaque em duas colunas: imagem e texto lado a lado, cabendo numa tela. */
+  @media (min-width: 56rem) {
+    .model-card--featured .model-card__link {
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      gap: var(--space-12);
+      align-items: center;
+    }
+
+    .model-card--featured p {
+      font-size: var(--text-base);
+    }
   }
 </style>

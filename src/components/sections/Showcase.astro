@@ -1,5 +1,6 @@
 ---
 import type { PortfolioEntry } from "../../domain/portfolio";
+import { splitFeatured } from "../../domain/portfolio";
 import ModelCard from "../portfolio/ModelCard.astro";
 import Tag from "../ui/Tag.astro";
 
@@ -8,7 +9,7 @@ interface Props {
 }
 
 const { entries } = Astro.props;
-const [featuredEntry, ...otherEntries] = entries;
+const { featured: featuredEntry, others: otherEntries } = splitFeatured(entries);
 ---
 
 <section class="showcase container section" id="trabalhos">
@@ -58,7 +59,7 @@ const [featuredEntry, ...otherEntries] = entries;
   .showcase__grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: var(--space-8);
+    gap: var(--space-12) var(--space-8);
     margin-top: var(--space-16);
   }
 

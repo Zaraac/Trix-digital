@@ -17,15 +17,27 @@ interface Props {
 
 const { entry, previous, next } = Astro.props;
 const title = `${entry.data.title} — Trix`;
+
+// Redes sociais não exibem SVG; nesse caso fica a imagem padrão do site.
+const cover = entry.data.cover.image;
+const socialImage = cover.format === "svg" ? undefined : cover.src;
+
+// Numeração das seções segue apenas as que realmente aparecem.
+const hasFeatures = entry.data.features.length > 0;
+const hasGallery = entry.data.gallery.length > 0;
+const sectionIndex = (position: number) => String(position).padStart(2, "0");
+const featuresIndex = sectionIndex(2);
+const galleryIndex = sectionIndex(hasFeatures ? 3 : 2);
+
+const contactHref = `${withBase("/")}?modelo=${encodeURIComponent(entry.id)}#contato`;
 ---
 
 <BaseLayout
   title={title}
   description={entry.data.summary}
-  image={entry.data.cover.image.src}
+  image={socialImage}
   type="article"
 >
-  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
   <Header />
   <main id="conteudo">
     <article>
@@ -59,9 +71,9 @@ const title = `${entry.data.title} — Trix`;
         </div>
 
         {
-          entry.data.features.length > 0 && (
+          hasFeatures && (
             <div class="work-details__features">
-              <Tag index="02" text="O que pode incluir" />
+              <Tag index={featuresIndex} text="O que pode incluir" />
               <ul>
                 {entry.data.features.map((feature) => <li>{feature}</li>)}
               </ul>
@@ -71,9 +83,9 @@ const title = `${entry.data.title} — Trix`;
       </section>
 
       {
-        entry.data.gallery.length > 0 && (
+        hasGallery && (
           <section class="gallery container section" aria-labelledby="gallery-title">
-            <Tag index="03" text="Galeria" />
+            <Tag index={galleryIndex} text="Galeria" />
             <h2 id="gallery-title">Outras telas e detalhes.</h2>
             <div class="gallery__grid">
               {entry.data.gallery.map((item) => (
@@ -105,7 +117,7 @@ const title = `${entry.data.title} — Trix`;
         <div>
           <h2>Quer partir deste modelo?</h2>
           <p>Conte sua ideia e vamos descobrir o que faz sentido para você.</p>
-          <Button href={withBase("/#contato")} label="Fale comigo" />
+          <Button href={contactHref} label="Fale comigo sobre este modelo" />
         </div>
       </section>
 
@@ -133,20 +145,6 @@ const title = `${entry.data.title} — Trix`;
 </BaseLayout>
 
 <style>
-  .skip-link {
-    position: fixed;
-    z-index: 100;
-    top: -5rem;
-    left: var(--space-4);
-    padding: var(--space-3) var(--space-4);
-    background: var(--color-brand);
-    color: var(--color-on-brand);
-  }
-
-  .skip-link:focus {
-    top: var(--space-4);
-  }
-
   .work-hero {
     padding-block: var(--space-8) var(--section-space);
   }
@@ -158,7 +156,7 @@ const title = `${entry.data.title} — Trix`;
     padding-bottom: var(--space-8);
     color: var(--color-text-muted);
     font-family: var(--font-mono);
-    font-size: 0.625rem;
+    font-size: var(--text-xs);
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }

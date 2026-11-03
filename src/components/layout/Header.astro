@@ -9,12 +9,16 @@ import { withBase } from "../../utils/url";
       <img
         class="header__logo header__logo--dark"
         src={withBase("/assets/logo/trix-logo-on-dark.svg")}
-        alt="Trix"
+        alt=""
+        width="115"
+        height="52"
       />
       <img
         class="header__logo header__logo--light"
         src={withBase("/assets/logo/trix-logo-on-light.svg")}
-        alt="Trix"
+        alt=""
+        width="115"
+        height="52"
       />
     </a>
 
@@ -38,12 +42,18 @@ import { withBase } from "../../utils/url";
 
 <style>
   .header {
+    position: sticky;
+    z-index: 50;
+    top: 0;
     border-bottom: 1px solid var(--color-line);
+    background: color-mix(in srgb, var(--color-bg) 95%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .header__inner {
     display: grid;
-    min-height: 6.5rem;
+    min-height: var(--header-height);
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
     gap: var(--space-8);
@@ -54,7 +64,8 @@ import { withBase } from "../../utils/url";
   }
 
   .header__logo {
-    width: 6.5rem;
+    width: 5.5rem;
+    height: auto;
   }
 
   .header__logo--light {
@@ -76,30 +87,48 @@ import { withBase } from "../../utils/url";
     gap: var(--space-8);
   }
 
-  .header__nav a,
-  .header__contact {
+  .header__nav a {
     color: var(--color-text-muted);
     font-size: var(--text-sm);
     text-decoration: none;
     transition: color var(--duration-fast) var(--ease-standard);
   }
 
-  .header__nav a:hover,
-  .header__contact:hover {
+  .header__nav a:hover {
     color: var(--color-brand);
   }
 
   .header__actions {
     justify-self: end;
+    gap: var(--space-4);
   }
 
   .header__contact {
+    display: inline-flex;
+    min-height: 2.75rem;
+    align-items: center;
+    gap: var(--space-2);
+    padding-inline: var(--space-4);
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-md);
     color: var(--color-text);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      color var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .header__contact:hover {
+    border-color: var(--color-brand);
+    color: var(--color-brand);
   }
 
   .header__contact svg {
     width: 1rem;
-    margin-left: var(--space-3);
+    flex: 0 0 auto;
     color: var(--color-brand);
     fill: none;
     stroke: currentColor;
@@ -108,9 +137,9 @@ import { withBase } from "../../utils/url";
 
   @media (max-width: 48rem) {
     .header__inner {
-      min-height: auto;
       grid-template-columns: 1fr auto;
-      padding-block: var(--space-4);
+      gap: var(--space-2) var(--space-4);
+      padding-block: var(--space-3) 0;
     }
 
     .header__nav {
@@ -118,12 +147,12 @@ import { withBase } from "../../utils/url";
       grid-row: 2;
       justify-content: space-between;
       gap: var(--space-4);
-      padding-top: var(--space-2);
+      min-height: 2.75rem;
       border-top: 1px solid var(--color-line);
     }
 
-    .header__contact {
-      display: none;
+    .header__actions {
+      gap: var(--space-2);
     }
   }
 </style>

@@ -1,13 +1,28 @@
 ---
 import Tag from "../ui/Tag.astro";
+import { buildWhatsAppUrl, defaultContactMessage } from "../../utils/contact";
 
-const endpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT;
-const email = import.meta.env.PUBLIC_CONTACT_EMAIL;
-const whatsapp = import.meta.env.PUBLIC_CONTACT_WHATSAPP;
-const hasContactChannel = Boolean(endpoint || email || whatsapp);
+interface Props {
+  /** Trabalhos publicados, para identificar o modelo vindo de `?modelo=`. */
+  models?: { id: string; title: string }[];
+}
+
+const { models = [] } = Astro.props;
+
+const endpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT?.trim();
+const email = import.meta.env.PUBLIC_CONTACT_EMAIL?.trim();
+const whatsappSetting = import.meta.env.PUBLIC_CONTACT_WHATSAPP?.trim();
+const whatsappUrl = buildWhatsAppUrl(whatsappSetting, defaultContactMessage);
+const hasContactChannel = Boolean(endpoint || email || whatsappUrl);
+const isDev = import.meta.env.DEV;
 ---
 
-<section class="contact container section" id="contato">
+<section
+  class="contact container section"
+  id="contato"
+  data-models={JSON.stringify(models)}
+  data-whatsapp={whatsappSetting ?? ""}
+>
   <Tag index="04" text="Vamos conversar" />
   <div class="contact__grid">
     <h2>Vamos tirar sua<br />ideia do papel<span>?</span></h2>
@@ -16,9 +31,13 @@ const hasContactChannel = Boolean(endpoint || email || whatsapp);
         Gostou de um modelo ou tem uma ideia diferente? Fale comigo para
         conversarmos sobre seu projeto.
       </p>
+
+      <p class="contact__model" data-contact-model hidden></p>
+
       {
-        endpoint ? (
-          <form action={endpoint} method="post">
+        endpoint && (
+          <form action={endpoint} method="post" data-contact-form>
+            <input type="hidden" name="modelo" value="" data-contact-model-input />
             <div class="contact__fields">
               <label>
                 <span>Nome</span>
@@ -31,32 +50,126 @@ const hasContactChannel = Boolean(endpoint || email || whatsapp);
             </div>
             <label>
               <span>Conte um pouco sobre o projeto</span>
-              <textarea name="message" rows="5" required></textarea>
+              <textarea name="message" rows="5" required data-contact-message></textarea>
             </label>
             <label class="contact__trap" aria-hidden="true">
               Não preencha
               <input name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
             </label>
-            <button type="submit">Enviar mensagem <span aria-hidden="true">↗</span></button>
+            <button type="submit" class="contact__submit">
+              <span data-contact-submit-label>Enviar mensagem</span>
+              <span aria-hidden="true">↗</span>
+            </button>
+            <p class="contact__status" role="status" aria-live="polite" data-contact-status></p>
           </form>
-        ) : (
-          <div class="contact__channels">
-            {email && <a href={`mailto:${email}`}>Enviar e-mail <span aria-hidden="true">↗</span></a>}
-            {whatsapp && (
-              <a href={whatsapp} target="_blank" rel="noreferrer">
+        )
+      }
+
+      {
+        (email || whatsappUrl) && (
+          <div class:list={["contact__channels", { "contact__channels--secondary": endpoint }]}>
+            {endpoint && <span class="contact__or">Prefere outro canal?</span>}
+            {whatsappUrl && (
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" data-contact-whatsapp>
                 Conversar pelo WhatsApp <span aria-hidden="true">↗</span>
               </a>
             )}
-            {!hasContactChannel && (
-              <p class="contact__pending">Canal de contato em configuração.</p>
+            {email && (
+              <a href={`mailto:${email}`}>
+                Enviar e-mail <span aria-hidden="true">↗</span>
+              </a>
             )}
           </div>
         )
       }
-      {!hasContactChannel && <small>Defina um canal no arquivo de ambiente antes da publicação.</small>}
+
+      {
+        !hasContactChannel &&
+          (isDev ? (
+            <p class="contact__pending">
+              Nenhum canal configurado. Defina <code>PUBLIC_CONTACT_ENDPOINT</code>,
+              <code>PUBLIC_CONTACT_EMAIL</code> ou <code>PUBLIC_CONTACT_WHATSAPP</code> no
+              <code>.env</code>. (Aviso visível só em desenvolvimento.)
+            </p>
+          ) : (
+            <p class="contact__pending">Em breve, os canais de contato estarão disponíveis aqui.</p>
+          ))
+      }
     </div>
   </div>
 </section>
+
+<script>
+  import { buildWhatsAppUrl, modelContactMessage } from "../../utils/contact";
+
+  const section = document.querySelector<HTMLElement>("#contato");
+
+  // Contexto do modelo: /?modelo=<id>#contato vindo da página de um trabalho.
+  if (section) {
+    const modelId = new URLSearchParams(window.location.search).get("modelo");
+    let models: { id: string; title: string }[] = [];
+    try {
+      models = JSON.parse(section.dataset.models ?? "[]");
+    } catch {}
+    const model = models.find((item) => item.id === modelId);
+
+    if (model) {
+      const message = modelContactMessage(model.title);
+
+      const note = section.querySelector<HTMLElement>("[data-contact-model]");
+      if (note) {
+        note.textContent = `Modelo de interesse: ${model.title}`;
+        note.hidden = false;
+      }
+
+      const hiddenInput = section.querySelector<HTMLInputElement>("[data-contact-model-input]");
+      if (hiddenInput) hiddenInput.value = model.title;
+
+      const textarea = section.querySelector<HTMLTextAreaElement>("[data-contact-message]");
+      if (textarea && !textarea.value) textarea.value = message;
+
+      const whatsappLink = section.querySelector<HTMLAnchorElement>("[data-contact-whatsapp]");
+      const whatsappUrl = buildWhatsAppUrl(section.dataset.whatsapp, message);
+      if (whatsappLink && whatsappUrl) whatsappLink.href = whatsappUrl;
+    }
+  }
+
+  // Envio sem sair da página. Sem JavaScript, o formulário segue o envio padrão.
+  const form = section?.querySelector<HTMLFormElement>("[data-contact-form]");
+  const status = form?.querySelector<HTMLElement>("[data-contact-status]");
+  const submit = form?.querySelector<HTMLButtonElement>("button[type=submit]");
+  const submitLabel = form?.querySelector<HTMLElement>("[data-contact-submit-label]");
+
+  const setStatus = (state: "idle" | "sending" | "success" | "error", text = "") => {
+    if (!form || !status || !submit || !submitLabel) return;
+    form.dataset.state = state;
+    status.textContent = text;
+    submit.disabled = state === "sending";
+    submitLabel.textContent = state === "sending" ? "Enviando…" : "Enviar mensagem";
+  };
+
+  form?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    setStatus("sending");
+
+    try {
+      const response = await fetch(form.action, {
+        method: "POST",
+        body: new FormData(form),
+        headers: { Accept: "application/json" },
+      });
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      form.reset();
+      setStatus("success", "Mensagem enviada! Respondo em breve.");
+    } catch {
+      setStatus(
+        "error",
+        "Não foi possível enviar agora. Tente novamente em instantes ou use um dos outros canais.",
+      );
+    }
+  });
+</script>
 
 <style>
   .contact {
@@ -80,9 +193,18 @@ const hasContactChannel = Boolean(endpoint || email || whatsapp);
     color: var(--color-brand);
   }
 
-  .contact__grid p {
+  .contact__content > p {
     margin-bottom: var(--space-6);
     color: var(--color-text-muted);
+  }
+
+  .contact__content > .contact__model {
+    margin-top: calc(-1 * var(--space-2));
+    padding: var(--space-3) var(--space-4);
+    border-left: 2px solid var(--color-accent);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: var(--text-sm);
   }
 
   form,
@@ -113,6 +235,18 @@ const hasContactChannel = Boolean(endpoint || email || whatsapp);
     border-radius: var(--radius-md);
     background: var(--color-surface);
     color: var(--color-text);
+    transition: border-color var(--duration-fast) var(--ease-standard);
+  }
+
+  input:hover,
+  textarea:hover {
+    border-color: var(--color-text-muted);
+  }
+
+  input:focus-visible,
+  textarea:focus-visible {
+    border-color: var(--color-brand);
+    outline-offset: 0;
   }
 
   input {
@@ -125,7 +259,7 @@ const hasContactChannel = Boolean(endpoint || email || whatsapp);
     resize: vertical;
   }
 
-  button,
+  .contact__submit,
   .contact__channels a {
     display: inline-flex;
     min-height: 3rem;
@@ -133,7 +267,7 @@ const hasContactChannel = Boolean(endpoint || email || whatsapp);
     justify-content: space-between;
     gap: var(--space-8);
     width: max-content;
-    border: 0;
+    border: 1px solid transparent;
     border-radius: var(--radius-md);
     padding: var(--space-3) var(--space-6);
     background: var(--color-brand);
@@ -141,32 +275,84 @@ const hasContactChannel = Boolean(endpoint || email || whatsapp);
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
+    transition: box-shadow var(--duration-fast) var(--ease-standard);
+  }
+
+  .contact__submit:hover,
+  .contact__channels a:hover {
+    box-shadow: var(--shadow-brand);
+  }
+
+  .contact__submit:disabled {
+    cursor: progress;
+    opacity: 0.7;
+  }
+
+  .contact__status:empty {
+    display: none;
+  }
+
+  .contact__status {
+    margin: 0;
+    padding: var(--space-3) var(--space-4);
+    border-left: 2px solid var(--color-line-strong);
+    background: var(--color-surface);
+    font-size: var(--text-sm);
+  }
+
+  form[data-state="success"] .contact__status {
+    border-color: var(--color-accent);
+  }
+
+  form[data-state="error"] .contact__status {
+    border-color: #f87171;
   }
 
   .contact__channels {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: var(--space-4);
   }
 
-  .contact__pending {
+  .contact__channels--secondary {
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .contact__channels--secondary a {
+    border-color: var(--color-line-strong);
+    background: transparent;
+    color: var(--color-text);
+  }
+
+  .contact__channels--secondary a:hover {
+    border-color: var(--color-brand);
+    box-shadow: none;
+    color: var(--color-brand);
+  }
+
+  .contact__or {
+    width: 100%;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .contact__content > .contact__pending {
     padding: var(--space-4);
     border-left: 2px solid var(--color-brand);
     background: var(--color-surface);
   }
 
+  .contact__pending code {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+
   .contact__trap {
     position: absolute;
     left: -9999px;
-  }
-
-  small {
-    display: block;
-    margin-top: var(--space-4);
-    color: var(--color-text-muted);
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    text-transform: uppercase;
   }
 
   @media (max-width: 48rem) {
@@ -177,6 +363,11 @@ const hasContactChannel = Boolean(endpoint || email || whatsapp);
 
     .contact__fields {
       grid-template-columns: 1fr;
+    }
+
+    .contact__submit,
+    .contact__channels a {
+      width: 100%;
     }
   }
 </style>

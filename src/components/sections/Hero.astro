@@ -6,22 +6,25 @@ import Tag from "../ui/Tag.astro";
 <section class="hero container" id="topo">
   <div class="hero__copy">
     <Tag text="Portfólio pessoal / Sites & sistemas" />
-    <h1>Seu próximo projeto<br />começa com<br /><span>uma possibilidade.</span></h1>
+    <h1>Seu próximo projeto começa com <span>uma possibilidade.</span></h1>
     <p>
       Eu crio sites e sistemas para transformar ideias em experiências digitais.
       Explore os modelos e fale comigo sobre o que você precisa.
     </p>
-    <Button href="#trabalhos" label="Conheça os modelos" />
+    <div class="hero__actions">
+      <Button href="#trabalhos" label="Conheça os modelos" />
+      <Button href="#contato" label="Fale comigo" variant="secondary" />
+    </div>
   </div>
 
-  <div class="hero__art" aria-label="Composição visual representando um site e um sistema">
-    <span class="hero__caption">TRIX / POSSIBILIDADES DIGITAIS</span>
-    <div class="hero__site">
+  <div class="hero__art" role="img" aria-label="Composição visual representando um site e um sistema">
+    <span class="hero__caption" aria-hidden="true">TRIX / POSSIBILIDADES DIGITAIS</span>
+    <div class="hero__site" aria-hidden="true">
       <span>SEU SITE</span>
-      <strong>Feito para<br />ser lembrado.</strong>
+      <strong>Feito para ser lembrado.</strong>
       <i></i>
     </div>
-    <div class="hero__system">
+    <div class="hero__system" aria-hidden="true">
       <span>SEU SISTEMA</span>
       <div>
         <i></i><i></i><i></i><i></i><i></i>
@@ -47,8 +50,16 @@ import Tag from "../ui/Tag.astro";
   }
 
   h1 {
+    max-width: 14ch;
     margin-block: var(--space-6);
-    font-size: var(--text-display);
+    font-size: clamp(2.5rem, 5.5vw, 4.25rem);
+    text-wrap: balance;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
   }
 
   h1 span {
@@ -77,7 +88,7 @@ import Tag from "../ui/Tag.astro";
   .hero__system > span,
   .hero__system small {
     font-family: var(--font-mono);
-    font-size: 0.625rem;
+    font-size: var(--text-xs);
     letter-spacing: 0.06em;
   }
 
@@ -97,10 +108,10 @@ import Tag from "../ui/Tag.astro";
   }
 
   .hero__site {
-    top: 5.5rem;
+    top: 4.5rem;
     right: 3.5rem;
     left: 2rem;
-    min-height: 15rem;
+    min-height: 14rem;
     padding: var(--space-6);
     transform: rotate(-4deg);
   }
@@ -110,11 +121,13 @@ import Tag from "../ui/Tag.astro";
     color: var(--color-brand);
   }
 
+  /* Texto limitado à metade esquerda para não ficar sob o cartão do sistema. */
   .hero__site strong {
     display: block;
+    max-width: 9ch;
     margin-top: var(--space-6);
     font-family: var(--font-display);
-    font-size: var(--text-2xl);
+    font-size: clamp(1.625rem, 2.6vw, 2.25rem);
     line-height: 1.05;
   }
 
@@ -128,9 +141,9 @@ import Tag from "../ui/Tag.astro";
 
   .hero__system {
     right: 1.5rem;
-    bottom: 3.5rem;
+    bottom: 2rem;
     width: 15rem;
-    padding: var(--space-5, 1.25rem);
+    padding: var(--space-5);
     transform: rotate(4deg);
   }
 
@@ -178,7 +191,7 @@ import Tag from "../ui/Tag.astro";
     border-top: 1px solid var(--color-line);
     color: var(--color-text-muted);
     font-family: var(--font-mono);
-    font-size: 0.625rem;
+    font-size: var(--text-xs);
     letter-spacing: 0.04em;
     text-transform: uppercase;
   }
@@ -196,17 +209,32 @@ import Tag from "../ui/Tag.astro";
   }
 
   @media (max-width: 36rem) {
+    /* No celular os cartões ficam empilhados em diagonal, sem cobrir o texto. */
     .hero__art {
-      min-height: 23rem;
+      min-height: 27rem;
+    }
+
+    .hero__site strong {
+      font-size: 1.5rem;
     }
 
     .hero__site {
+      top: 3.75rem;
       right: 2rem;
-      min-height: 13rem;
+      left: 1.25rem;
+      min-height: 11rem;
     }
 
     .hero__system {
-      width: 12rem;
+      right: 1rem;
+      bottom: 1rem;
+      width: 10.5rem;
+      padding: var(--space-4);
+    }
+
+    .hero__system > div {
+      height: 3.5rem;
+      margin-block: var(--space-3);
     }
 
     .hero__footer {

@@ -17,33 +17,13 @@ const portfolio = getPublishedPortfolio(await getCollection("portfolio"));
   title="Trix — Portfólio de sites e sistemas"
   description="Conheça modelos de sites e sistemas e encontre um ponto de partida para seu projeto."
 >
-  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
   <Header />
   <main id="conteudo">
     <Hero />
     <Showcase entries={portfolio} />
     <Services />
     <About />
-    <Contact />
+    <Contact models={portfolio.map((entry) => ({ id: entry.id, title: entry.data.title }))} />
   </main>
   <Footer />
 </BaseLayout>
-
-<style>
-  .skip-link {
-    position: fixed;
-    z-index: 100;
-    top: -5rem;
-    left: var(--space-4);
-    padding: var(--space-3) var(--space-4);
-    border-radius: var(--radius-md);
-    background: var(--color-brand);
-    color: var(--color-on-brand);
-    font-weight: 600;
-    text-decoration: none;
-  }
-
-  .skip-link:focus {
-    top: var(--space-4);
-  }
-</style>
