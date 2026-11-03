@@ -1,10 +1,12 @@
 ---
+import { Font } from "astro:assets";
 import "../styles/global.css";
 import { withBase } from "../utils/url";
 
 interface Props {
   title: string;
   description: string;
+  /** Caminho de uma imagem raster (PNG/JPG). Redes sociais não exibem SVG. */
   image?: string;
   type?: "website" | "article";
 }
@@ -12,7 +14,7 @@ interface Props {
 const {
   title,
   description,
-  image = withBase("/assets/logo/trix-mark-on-dark.svg"),
+  image = withBase("/og-image.png"),
   type = "website",
 } = Astro.props;
 
@@ -27,7 +29,7 @@ const socialImage = configuredSiteUrl ? `${configuredSiteUrl}${image}` : image;
 <html lang="pt-BR" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" content="#0a0e14" />
@@ -37,31 +39,40 @@ const socialImage = configuredSiteUrl ? `${configuredSiteUrl}${image}` : image;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {canonical && <meta property="og:url" content={canonical} />}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
     {canonical && <link rel="canonical" href={canonical} />}
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <Font cssVariable="--font-chakra" preload={[{ weight: 700 }]} />
+    <Font cssVariable="--font-plex-sans" preload={[{ weight: 400 }]} />
+    <Font cssVariable="--font-plex-mono" />
     <link rel="icon" type="image/svg+xml" href={withBase("/assets/logo/trix-mark-on-dark.svg")} />
     <title>{title}</title>
     <script is:inline>
+      // Aplica o tema antes da pintura: escolha salva > preferência do sistema.
       (() => {
+        const root = document.documentElement;
+        let theme;
         try {
-          const savedTheme = localStorage.getItem("trix-theme");
-          if (savedTheme === "light" || savedTheme === "dark") {
-            document.documentElement.dataset.theme = savedTheme;
-          }
+          const saved = localStorage.getItem("trix-theme");
+          if (saved === "light" || saved === "dark") theme = saved;
         } catch {}
+        if (!theme) {
+          theme = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        root.dataset.theme = theme;
+        document
+          .querySelector('meta[name="theme-color"]')
+          ?.setAttribute("content", theme === "light" ? "#f4f7fa" : "#0a0e14");
       })();
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
     <slot />
   </body>
 </html>

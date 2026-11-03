@@ -8,7 +8,7 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: var(--space-8);
+  scroll-padding-top: calc(var(--header-height) + var(--space-4));
 }
 
 body {
@@ -73,6 +73,23 @@ h3 {
   padding-block: var(--section-space);
 }
 
+.skip-link {
+  position: fixed;
+  z-index: 100;
+  top: -5rem;
+  left: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-brand);
+  color: var(--color-on-brand);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: var(--space-4);
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -83,6 +100,29 @@ h3 {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+/* Revelação ao rolar só com CSS; sem suporte, o conteúdo apenas aparece. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .section > * {
+      animation: reveal linear both;
+    }
+
+    /* Regra separada: o minificador funde longhands no shorthand `animation`,
+       que não aceita timeline — e o navegador descartaria a declaração. */
+    .section > :where(*) {
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    translate: 0 1.5rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

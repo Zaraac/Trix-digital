@@ -1,6 +1,6 @@
 ---
 import { getCollection, render, type CollectionEntry } from "astro:content";
-import { getPublishedPortfolio } from "../../domain/portfolio";
+import { getNeighbours, getPublishedPortfolio } from "../../domain/portfolio";
 import ModelLayout from "../../layouts/ModelLayout.astro";
 
 interface Props {
@@ -16,8 +16,7 @@ export async function getStaticPaths() {
     params: { slug: entry.id },
     props: {
       entry,
-      previous: entries[index - 1] ?? entries.at(-1),
-      next: entries[index + 1] ?? entries[0],
+      ...getNeighbours(entries, index),
     },
   }));
 }

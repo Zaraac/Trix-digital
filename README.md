@@ -26,8 +26,13 @@ Copie `.env.example` para `.env` e informe:
 - `PUBLIC_CONTACT_ENDPOINT`: endpoint de formulário, se houver;
 - `PUBLIC_CONTACT_EMAIL` ou `PUBLIC_CONTACT_WHATSAPP`: canais alternativos.
 
-Sem um canal configurado, a área de contato informa que ainda está em
-configuração e não envia dados.
+Sem um canal configurado, a área de contato mostra um aviso de configuração
+apenas em desenvolvimento. No deploy do GitHub Pages, a publicação **falha** se
+nenhuma das variáveis acima estiver definida em *Settings → Secrets and
+variables → Actions → Variables* do repositório.
+
+As páginas de trabalho levam a `/?modelo=<slug>#contato`, que identifica o
+modelo e preenche a mensagem do formulário e do WhatsApp.
 
 O resultado de `npm run build` é um site estático. A pasta `dist/` pode ser
 publicada em Cloudflare Pages, Netlify, Vercel ou outro serviço de arquivos
@@ -46,4 +51,5 @@ src/domain       tipos e regras do portfólio
 src/layouts      layouts compartilhados
 src/pages        home, trabalhos e página 404
 src/styles       tokens e estilos globais
+src/assets/fonts fontes self-hosted (configuradas em astro.config.mjs)
 ```

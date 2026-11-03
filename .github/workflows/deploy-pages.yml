@@ -30,10 +30,25 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      # Um portfólio sem canal de contato não converte: bloqueia a publicação.
+      - name: Require a contact channel
+        env:
+          PUBLIC_CONTACT_ENDPOINT: ${{ vars.PUBLIC_CONTACT_ENDPOINT }}
+          PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
+          PUBLIC_CONTACT_WHATSAPP: ${{ vars.PUBLIC_CONTACT_WHATSAPP }}
+        run: |
+          if [ -z "$PUBLIC_CONTACT_ENDPOINT$PUBLIC_CONTACT_EMAIL$PUBLIC_CONTACT_WHATSAPP" ]; then
+            echo "::error title=Canal de contato ausente::Defina ao menos uma das variables PUBLIC_CONTACT_ENDPOINT, PUBLIC_CONTACT_EMAIL ou PUBLIC_CONTACT_WHATSAPP em Settings > Secrets and variables > Actions > Variables."
+            exit 1
+          fi
+
       - name: Build site
         run: npm run build
         env:
           PUBLIC_SITE_URL: https://zaraac.github.io
+          PUBLIC_CONTACT_ENDPOINT: ${{ vars.PUBLIC_CONTACT_ENDPOINT }}
+          PUBLIC_CONTACT_EMAIL: ${{ vars.PUBLIC_CONTACT_EMAIL }}
+          PUBLIC_CONTACT_WHATSAPP: ${{ vars.PUBLIC_CONTACT_WHATSAPP }}
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
