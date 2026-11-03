@@ -102,6 +102,29 @@ h3 {
   border: 0;
 }
 
+/* Revelação ao rolar só com CSS; sem suporte, o conteúdo apenas aparece. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .section > * {
+      animation: reveal linear both;
+    }
+
+    /* Regra separada: o minificador funde longhands no shorthand `animation`,
+       que não aceita timeline — e o navegador descartaria a declaração. */
+    .section > :where(*) {
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    translate: 0 1.5rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

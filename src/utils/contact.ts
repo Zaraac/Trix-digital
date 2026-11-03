@@ -1,33 +1,17 @@
 /**
- * Monta o link do WhatsApp a partir do valor configurado.
- *
- * Aceita tanto um número ("(11) 98765-4321", "5511987654321") quanto uma URL
- * completa. Números brasileiros sem DDI (10 ou 11 dígitos) recebem o 55.
- * Retorna `undefined` quando o valor não forma um link válido.
+ * Link do WhatsApp a partir do valor configurado: um número (com ou sem DDI,
+ * qualquer formatação) vira wa.me com mensagem; uma URL é usada como está.
  */
-export const buildWhatsAppUrl = (value: string | undefined, message?: string) => {
+export const buildWhatsAppUrl = (value: string | undefined, message: string) => {
   const raw = value?.trim();
   if (!raw) return undefined;
+  if (/^https?:\/\//i.test(raw)) return raw;
 
-  if (/^https?:\/\//i.test(raw)) {
-    if (!message) return raw;
-    try {
-      const url = new URL(raw);
-      if (/(^|\.)wa\.me$|whatsapp\.com$/i.test(url.hostname)) {
-        url.searchParams.set("text", message);
-      }
-      return url.toString();
-    } catch {
-      return undefined;
-    }
-  }
+  const digits = raw.replace(/\D/g, "");
+  const number = digits.length <= 11 ? `55${digits}` : digits;
+  if (number.length < 12 || number.length > 15) return undefined;
 
-  let digits = raw.replace(/\D/g, "");
-  if (digits.length === 10 || digits.length === 11) digits = `55${digits}`;
-  if (digits.length < 12 || digits.length > 15) return undefined;
-
-  const text = message ? `?text=${encodeURIComponent(message)}` : "";
-  return `https://wa.me/${digits}${text}`;
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
 };
 
 export const defaultContactMessage = "Olá! Vi seu portfólio e gostaria de conversar sobre um projeto.";

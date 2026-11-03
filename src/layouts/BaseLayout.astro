@@ -1,4 +1,5 @@
 ---
+import { Font } from "astro:assets";
 import "../styles/global.css";
 import { withBase } from "../utils/url";
 
@@ -46,12 +47,9 @@ const socialImage = configuredSiteUrl ? `${configuredSiteUrl}${image}` : image;
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
     {canonical && <link rel="canonical" href={canonical} />}
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <Font cssVariable="--font-chakra" preload={[{ weight: 700 }]} />
+    <Font cssVariable="--font-plex-sans" preload={[{ weight: 400 }]} />
+    <Font cssVariable="--font-plex-mono" />
     <link rel="icon" type="image/svg+xml" href={withBase("/assets/logo/trix-mark-on-dark.svg")} />
     <title>{title}</title>
     <script is:inline>

@@ -51,4 +51,5 @@ src/domain       tipos e regras do portfólio
 src/layouts      layouts compartilhados
 src/pages        home, trabalhos e página 404
 src/styles       tokens e estilos globais
+src/assets/fonts fontes self-hosted (configuradas em astro.config.mjs)
 ```
