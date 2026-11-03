@@ -1,0 +1,38 @@
+---
+import Footer from "../components/layout/Footer.astro";
+import Header from "../components/layout/Header.astro";
+import Button from "../components/ui/Button.astro";
+import Tag from "../components/ui/Tag.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { withBase } from "../utils/url";
+---
+
+<BaseLayout title="Página não encontrada — Trix" description="A página procurada não foi encontrada.">
+  <Header />
+  <main class="container not-found">
+    <Tag text="Erro 404" />
+    <h1>Esta página não existe.</h1>
+    <p>O endereço pode ter mudado ou sido digitado incorretamente.</p>
+    <Button href={withBase("/")} label="Voltar para o início" />
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .not-found {
+    display: grid;
+    min-height: 65vh;
+    place-content: center;
+    justify-items: start;
+  }
+
+  h1 {
+    margin-block: var(--space-4);
+    font-size: var(--text-display);
+  }
+
+  p {
+    margin-bottom: var(--space-8);
+    color: var(--color-text-muted);
+  }
+</style>

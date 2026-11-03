@@ -1,0 +1,347 @@
+---
+import { Image } from "astro:assets";
+import Footer from "../components/layout/Footer.astro";
+import Header from "../components/layout/Header.astro";
+import Button from "../components/ui/Button.astro";
+import Tag from "../components/ui/Tag.astro";
+import type { PortfolioEntry } from "../domain/portfolio";
+import { categoryLabels, entryTypeLabels } from "../domain/portfolio";
+import BaseLayout from "./BaseLayout.astro";
+import { withBase } from "../utils/url";
+
+interface Props {
+  entry: PortfolioEntry;
+  previous?: PortfolioEntry;
+  next?: PortfolioEntry;
+}
+
+const { entry, previous, next } = Astro.props;
+const title = `${entry.data.title} — Trix`;
+---
+
+<BaseLayout
+  title={title}
+  description={entry.data.summary}
+  image={entry.data.cover.image.src}
+  type="article"
+>
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+  <Header />
+  <main id="conteudo">
+    <article>
+      <header class="work-hero container">
+        <div class="work-hero__breadcrumb">
+          <a href={withBase("/#trabalhos")}>← Todos os trabalhos</a>
+          <span>{entryTypeLabels[entry.data.entryType]}</span>
+        </div>
+        <div class="work-hero__grid">
+          <div>
+            <Tag text={`${categoryLabels[entry.data.category]} / ${entryTypeLabels[entry.data.entryType]}`} />
+            <h1>{entry.data.title}</h1>
+          </div>
+          <p>{entry.data.summary}</p>
+        </div>
+        <div class="work-hero__image">
+          <Image
+            src={entry.data.cover.image}
+            alt={entry.data.cover.alt}
+            widths={[640, 960, 1440]}
+            sizes="(max-width: 1280px) 100vw, 1248px"
+            loading="eager"
+          />
+        </div>
+      </header>
+
+      <section class="work-details container section">
+        <div class="work-details__intro">
+          <Tag index="01" text="Sobre este trabalho" />
+          <div class="prose"><slot /></div>
+        </div>
+
+        {
+          entry.data.features.length > 0 && (
+            <div class="work-details__features">
+              <Tag index="02" text="O que pode incluir" />
+              <ul>
+                {entry.data.features.map((feature) => <li>{feature}</li>)}
+              </ul>
+            </div>
+          )
+        }
+      </section>
+
+      {
+        entry.data.gallery.length > 0 && (
+          <section class="gallery container section" aria-labelledby="gallery-title">
+            <Tag index="03" text="Galeria" />
+            <h2 id="gallery-title">Outras telas e detalhes.</h2>
+            <div class="gallery__grid">
+              {entry.data.gallery.map((item) => (
+                <Image
+                  src={item.image}
+                  alt={item.alt}
+                  widths={[480, 768, 1200]}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      {
+        entry.data.technologies.length > 0 && (
+          <section class="technologies container">
+            <Tag text="Tecnologias" />
+            <ul>
+              {entry.data.technologies.map((technology) => <li>{technology}</li>)}
+            </ul>
+          </section>
+        )
+      }
+
+      <section class="work-contact container section">
+        <Tag text="Seu projeto" />
+        <div>
+          <h2>Quer partir deste modelo?</h2>
+          <p>Conte sua ideia e vamos descobrir o que faz sentido para você.</p>
+          <Button href={withBase("/#contato")} label="Fale comigo" />
+        </div>
+      </section>
+
+      <nav class="work-nav container" aria-label="Outros trabalhos">
+        {
+          previous && (
+            <a href={withBase(`/trabalhos/${previous.id}/`)}>
+              <span>← Anterior</span>
+              <strong>{previous.data.title}</strong>
+            </a>
+          )
+        }
+        {
+          next && (
+            <a class="work-nav__next" href={withBase(`/trabalhos/${next.id}/`)}>
+              <span>Próximo →</span>
+              <strong>{next.data.title}</strong>
+            </a>
+          )
+        }
+      </nav>
+    </article>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .skip-link {
+    position: fixed;
+    z-index: 100;
+    top: -5rem;
+    left: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    background: var(--color-brand);
+    color: var(--color-on-brand);
+  }
+
+  .skip-link:focus {
+    top: var(--space-4);
+  }
+
+  .work-hero {
+    padding-block: var(--space-8) var(--section-space);
+  }
+
+  .work-hero__breadcrumb {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    padding-bottom: var(--space-8);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .work-hero__breadcrumb a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .work-hero__grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: var(--space-16);
+    align-items: end;
+    padding-block: var(--space-8) var(--space-12);
+  }
+
+  h1 {
+    max-width: 48rem;
+    margin-block: var(--space-4) 0;
+    font-size: var(--text-display);
+  }
+
+  .work-hero__grid > p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+
+  .work-hero__image {
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+  }
+
+  .work-hero__image :global(img) {
+    width: 100%;
+    height: auto;
+  }
+
+  .work-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .prose {
+    max-width: 42rem;
+    margin-top: var(--space-6);
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+
+  .prose :global(p) {
+    margin-bottom: var(--space-4);
+  }
+
+  .work-details__features ul {
+    margin: var(--space-6) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .work-details__features li {
+    padding-block: var(--space-4);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .work-details__features li::before {
+    content: "+";
+    margin-right: var(--space-4);
+    color: var(--color-brand);
+    font-family: var(--font-mono);
+  }
+
+  .gallery {
+    border-top: 1px solid var(--color-line);
+  }
+
+  .gallery h2 {
+    margin-block: var(--space-4) var(--space-8);
+    font-size: var(--text-2xl);
+  }
+
+  .gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-8);
+  }
+
+  .gallery__grid :global(img) {
+    width: 100%;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+  }
+
+  .technologies {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+    padding-block: var(--space-8);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .technologies ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .technologies li {
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+  }
+
+  .work-contact {
+    display: grid;
+    grid-template-columns: 0.6fr 1.4fr;
+    gap: var(--space-16);
+    border-top: 1px solid var(--color-line);
+  }
+
+  .work-contact h2 {
+    margin: 0 0 var(--space-4);
+    font-size: var(--text-2xl);
+  }
+
+  .work-contact p {
+    margin-bottom: var(--space-6);
+    color: var(--color-text-muted);
+  }
+
+  .work-nav {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    border-top: 1px solid var(--color-line);
+  }
+
+  .work-nav a {
+    display: grid;
+    gap: var(--space-2);
+    padding-block: var(--space-8);
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  .work-nav a:hover {
+    color: var(--color-brand);
+  }
+
+  .work-nav span {
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+  }
+
+  .work-nav__next {
+    text-align: right;
+  }
+
+  @media (max-width: 48rem) {
+    .work-hero__grid,
+    .work-details,
+    .work-contact {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+
+    .gallery__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .work-nav strong {
+      font-size: var(--text-sm);
+    }
+  }
+</style>

@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">Modelo de painel de gestão</title>
+  <desc id="desc">Painel escuro com indicadores, gráfico e navegação lateral</desc>
+  <rect width="1200" height="700" fill="#182231"/>
+  <rect x="65" y="60" width="1070" height="580" rx="4" fill="#0a0e14" stroke="#6b7c93"/>
+  <rect x="65" y="60" width="210" height="580" fill="#111823"/>
+  <path d="M275 60v580M65 125h1070" stroke="#2a3647"/>
+  <circle cx="105" cy="93" r="6" fill="#a3e635"/>
+  <text x="125" y="99" fill="#e8eef5" font-family="monospace" font-size="15">TRIX / GESTÃO</text>
+  <text x="100" y="180" fill="#22d3ee" font-family="Arial, sans-serif" font-size="16">Visão geral</text>
+  <text x="100" y="230" fill="#9aa8bb" font-family="Arial, sans-serif" font-size="16">Pedidos</text>
+  <text x="100" y="280" fill="#9aa8bb" font-family="Arial, sans-serif" font-size="16">Atividades</text>
+  <text x="100" y="330" fill="#9aa8bb" font-family="Arial, sans-serif" font-size="16">Contatos</text>
+  <text x="325" y="180" fill="#e8eef5" font-family="Arial, sans-serif" font-size="28" font-weight="700">Visão do negócio</text>
+  <text x="325" y="230" fill="#9aa8bb" font-family="monospace" font-size="13">PEDIDOS EM ANDAMENTO</text>
+  <text x="325" y="285" fill="#e8eef5" font-family="Arial, sans-serif" font-size="44">03</text>
+  <text x="760" y="230" fill="#9aa8bb" font-family="monospace" font-size="13">ATUALIZAÇÃO</text>
+  <text x="760" y="285" fill="#e8eef5" font-family="Arial, sans-serif" font-size="38">Contínua</text>
+  <path d="M325 350H1080M325 420H1080M325 490H1080M430 330V540M570 330V540M710 330V540M850 330V540M990 330V540" stroke="#2a3647"/>
+  <polyline points="325,510 400,510 400,455 490,455 490,480 580,480 580,410 670,410 670,445 760,445 760,380 850,380 850,420 940,420 940,350 1080,350" fill="none" stroke="#22d3ee" stroke-width="4"/>
+  <text x="325" y="590" fill="#9aa8bb" font-family="monospace" font-size="12">MODELO CONCEITUAL / DADOS ILUSTRATIVOS</text>
+</svg>

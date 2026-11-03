@@ -1,0 +1,62 @@
+---
+import Button from "../ui/Button.astro";
+import Tag from "../ui/Tag.astro";
+---
+
+<section class="about container section" id="sobre">
+  <div>
+    <Tag index="03" text="Por trás da Trix" />
+    <h2>Meu trabalho é dar<br />forma à sua ideia.</h2>
+  </div>
+  <div class="about__copy">
+    <p class="about__lead">
+      A Trix é meu espaço para compartilhar o que crio: sites e sistemas pensados
+      para pessoas e negócios.
+    </p>
+    <p>
+      Aqui você pode explorar propostas visuais e encontrar um ponto de partida
+      para seu projeto. A partir daí, conversamos sobre o que faz sentido para você.
+    </p>
+    <small>Apresentação provisória / biografia a personalizar</small>
+    <Button href="#contato" label="Converse comigo" variant="text" />
+  </div>
+</section>
+
+<style>
+  .about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+  }
+
+  h2 {
+    margin-block: var(--space-4) 0;
+    font-size: var(--text-2xl);
+  }
+
+  .about__lead {
+    color: var(--color-text);
+    font-size: var(--text-xl);
+  }
+
+  .about__copy > p:not(.about__lead) {
+    color: var(--color-text-muted);
+  }
+
+  small {
+    display: block;
+    margin-block: var(--space-6) var(--space-3);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 48rem) {
+    .about {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+  }
+</style>

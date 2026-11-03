@@ -1,0 +1,75 @@
+---
+import type { PortfolioEntry } from "../../domain/portfolio";
+import ModelCard from "../portfolio/ModelCard.astro";
+import Tag from "../ui/Tag.astro";
+
+interface Props {
+  entries: PortfolioEntry[];
+}
+
+const { entries } = Astro.props;
+const [featuredEntry, ...otherEntries] = entries;
+---
+
+<section class="showcase container section" id="trabalhos">
+  <header class="showcase__header">
+    <div>
+      <Tag index="01" text="Explore meu trabalho" />
+      <h2>Sites para apresentar.<br />Sistemas para facilitar.</h2>
+    </div>
+    <p>
+      Escolha um modelo como ponto de partida.<br />Vamos adaptá-lo à sua ideia.
+    </p>
+  </header>
+
+  {featuredEntry && <ModelCard entry={featuredEntry} index={0} featured />}
+
+  {
+    otherEntries.length > 0 && (
+      <div class="showcase__grid">
+        {otherEntries.map((entry, index) => (
+          <ModelCard entry={entry} index={index + 1} />
+        ))}
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .showcase__header {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-12);
+    margin-bottom: var(--space-12);
+  }
+
+  h2 {
+    margin-block: var(--space-4) 0;
+    font-size: var(--text-2xl);
+  }
+
+  .showcase__header > p {
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  .showcase__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-8);
+    margin-top: var(--space-16);
+  }
+
+  @media (max-width: 48rem) {
+    .showcase__header {
+      display: grid;
+      gap: var(--space-6);
+    }
+
+    .showcase__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

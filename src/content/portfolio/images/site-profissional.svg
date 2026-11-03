@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">Modelo de site profissional</title>
+  <desc id="desc">Interface escura com título, navegação e composição geométrica em ciano</desc>
+  <rect width="1200" height="700" fill="#111823"/>
+  <rect x="70" y="55" width="1060" height="590" rx="4" fill="#0a0e14" stroke="#6b7c93"/>
+  <path d="M70 115h1060" stroke="#2a3647"/>
+  <circle cx="105" cy="85" r="6" fill="#22d3ee"/>
+  <circle cx="129" cy="85" r="6" fill="#6b7c93"/>
+  <circle cx="153" cy="85" r="6" fill="#6b7c93"/>
+  <text x="970" y="91" fill="#9aa8bb" font-family="monospace" font-size="14">PORTFÓLIO</text>
+  <text x="125" y="195" fill="#22d3ee" font-family="monospace" font-size="14">SEU NOME / SEU TRABALHO</text>
+  <text x="125" y="285" fill="#e8eef5" font-family="Arial, sans-serif" font-size="64" font-weight="700">Um espaço para</text>
+  <text x="125" y="360" fill="#e8eef5" font-family="Arial, sans-serif" font-size="64" font-weight="700">o que você faz.</text>
+  <rect x="125" y="415" width="250" height="52" rx="3" fill="#22d3ee"/>
+  <text x="156" y="448" fill="#04141a" font-family="Arial, sans-serif" font-size="16" font-weight="700">CONHEÇA MEU TRABALHO</text>
+  <rect x="760" y="185" width="250" height="250" fill="none" stroke="#22d3ee" stroke-width="3" transform="rotate(8 885 310)"/>
+  <rect x="840" y="270" width="175" height="175" fill="#182231" stroke="#a3e635" stroke-width="3" transform="rotate(-8 927 357)"/>
+  <path d="M125 540h950" stroke="#2a3647"/>
+  <text x="125" y="585" fill="#9aa8bb" font-family="monospace" font-size="13">SOBRE  /  TRABALHOS  /  CONTATO</text>
+</svg>

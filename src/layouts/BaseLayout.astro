@@ -1,0 +1,67 @@
+---
+import "../styles/global.css";
+import { withBase } from "../utils/url";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  type?: "website" | "article";
+}
+
+const {
+  title,
+  description,
+  image = withBase("/assets/logo/trix-mark-on-dark.svg"),
+  type = "website",
+} = Astro.props;
+
+const configuredSiteUrl = import.meta.env.PUBLIC_SITE_URL?.replace(/\/$/, "");
+const canonical = configuredSiteUrl
+  ? `${configuredSiteUrl}${Astro.url.pathname}`
+  : undefined;
+const socialImage = configuredSiteUrl ? `${configuredSiteUrl}${image}` : image;
+---
+
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0a0e14" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="Trix" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/svg+xml" href={withBase("/assets/logo/trix-mark-on-dark.svg")} />
+    <title>{title}</title>
+    <script is:inline>
+      (() => {
+        try {
+          const savedTheme = localStorage.getItem("trix-theme");
+          if (savedTheme === "light" || savedTheme === "dark") {
+            document.documentElement.dataset.theme = savedTheme;
+          }
+        } catch {}
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

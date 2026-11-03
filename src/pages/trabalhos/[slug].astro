@@ -1,0 +1,31 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import { getPublishedPortfolio } from "../../domain/portfolio";
+import ModelLayout from "../../layouts/ModelLayout.astro";
+
+interface Props {
+  entry: CollectionEntry<"portfolio">;
+  previous?: CollectionEntry<"portfolio">;
+  next?: CollectionEntry<"portfolio">;
+}
+
+export async function getStaticPaths() {
+  const entries = getPublishedPortfolio(await getCollection("portfolio"));
+
+  return entries.map((entry, index) => ({
+    params: { slug: entry.id },
+    props: {
+      entry,
+      previous: entries[index - 1] ?? entries.at(-1),
+      next: entries[index + 1] ?? entries[0],
+    },
+  }));
+}
+
+const { entry, previous, next } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<ModelLayout entry={entry} previous={previous} next={next}>
+  <Content />
+</ModelLayout>

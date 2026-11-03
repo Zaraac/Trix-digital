@@ -1,0 +1,49 @@
+---
+import { getCollection } from "astro:content";
+import Footer from "../components/layout/Footer.astro";
+import Header from "../components/layout/Header.astro";
+import About from "../components/sections/About.astro";
+import Contact from "../components/sections/Contact.astro";
+import Hero from "../components/sections/Hero.astro";
+import Services from "../components/sections/Services.astro";
+import Showcase from "../components/sections/Showcase.astro";
+import { getPublishedPortfolio } from "../domain/portfolio";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const portfolio = getPublishedPortfolio(await getCollection("portfolio"));
+---
+
+<BaseLayout
+  title="Trix — Portfólio de sites e sistemas"
+  description="Conheça modelos de sites e sistemas e encontre um ponto de partida para seu projeto."
+>
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+  <Header />
+  <main id="conteudo">
+    <Hero />
+    <Showcase entries={portfolio} />
+    <Services />
+    <About />
+    <Contact />
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .skip-link {
+    position: fixed;
+    z-index: 100;
+    top: -5rem;
+    left: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-md);
+    background: var(--color-brand);
+    color: var(--color-on-brand);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .skip-link:focus {
+    top: var(--space-4);
+  }
+</style>

@@ -1,0 +1,98 @@
+---
+interface Props {
+  href?: string;
+  variant?: "primary" | "secondary" | "text";
+  label: string;
+  class?: string;
+}
+
+const {
+  href,
+  variant = "primary",
+  label,
+  class: className,
+} = Astro.props;
+
+const classes = ["button", `button--${variant}`, className].filter(Boolean);
+---
+
+{
+  href ? (
+    <a class:list={classes} href={href}>
+      <span>{label}</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 19 19 5M8 5h11v11"></path>
+      </svg>
+    </a>
+  ) : (
+    <button class:list={classes} type="button">
+      <span>{label}</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 19 19 5M8 5h11v11"></path>
+      </svg>
+    </button>
+  )
+}
+
+<style>
+  .button {
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-8);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-6);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      color var(--duration-fast) var(--ease-standard),
+      background var(--duration-fast) var(--ease-standard),
+      border-color var(--duration-fast) var(--ease-standard),
+      box-shadow var(--duration-fast) var(--ease-standard);
+  }
+
+  .button--primary {
+    background: var(--color-brand);
+    color: var(--color-on-brand);
+  }
+
+  .button--primary:hover {
+    box-shadow: var(--shadow-brand);
+  }
+
+  .button--secondary {
+    border-color: var(--color-line-strong);
+    background: transparent;
+    color: var(--color-text);
+  }
+
+  .button--secondary:hover {
+    border-color: var(--color-brand);
+    color: var(--color-brand);
+  }
+
+  .button--text {
+    min-height: 2.75rem;
+    padding-inline: 0;
+    background: transparent;
+    color: var(--color-text);
+  }
+
+  .button--text:hover {
+    color: var(--color-brand);
+  }
+
+  svg {
+    width: 1.125rem;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+    stroke-width: 1.5;
+  }
+</style>

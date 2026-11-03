@@ -1,0 +1,182 @@
+---
+import Tag from "../ui/Tag.astro";
+
+const endpoint = import.meta.env.PUBLIC_CONTACT_ENDPOINT;
+const email = import.meta.env.PUBLIC_CONTACT_EMAIL;
+const whatsapp = import.meta.env.PUBLIC_CONTACT_WHATSAPP;
+const hasContactChannel = Boolean(endpoint || email || whatsapp);
+---
+
+<section class="contact container section" id="contato">
+  <Tag index="04" text="Vamos conversar" />
+  <div class="contact__grid">
+    <h2>Vamos tirar sua<br />ideia do papel<span>?</span></h2>
+    <div class="contact__content">
+      <p>
+        Gostou de um modelo ou tem uma ideia diferente? Fale comigo para
+        conversarmos sobre seu projeto.
+      </p>
+      {
+        endpoint ? (
+          <form action={endpoint} method="post">
+            <div class="contact__fields">
+              <label>
+                <span>Nome</span>
+                <input name="name" type="text" autocomplete="name" required />
+              </label>
+              <label>
+                <span>E-mail</span>
+                <input name="email" type="email" autocomplete="email" required />
+              </label>
+            </div>
+            <label>
+              <span>Conte um pouco sobre o projeto</span>
+              <textarea name="message" rows="5" required></textarea>
+            </label>
+            <label class="contact__trap" aria-hidden="true">
+              Não preencha
+              <input name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
+            </label>
+            <button type="submit">Enviar mensagem <span aria-hidden="true">↗</span></button>
+          </form>
+        ) : (
+          <div class="contact__channels">
+            {email && <a href={`mailto:${email}`}>Enviar e-mail <span aria-hidden="true">↗</span></a>}
+            {whatsapp && (
+              <a href={whatsapp} target="_blank" rel="noreferrer">
+                Conversar pelo WhatsApp <span aria-hidden="true">↗</span>
+              </a>
+            )}
+            {!hasContactChannel && (
+              <p class="contact__pending">Canal de contato em configuração.</p>
+            )}
+          </div>
+        )
+      }
+      {!hasContactChannel && <small>Defina um canal no arquivo de ambiente antes da publicação.</small>}
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    border-top: 1px solid var(--color-line);
+  }
+
+  .contact__grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: var(--space-16);
+    align-items: center;
+    margin-top: var(--space-8);
+  }
+
+  h2 {
+    margin: 0;
+    font-size: clamp(2.5rem, 5vw, 4.25rem);
+  }
+
+  h2 span {
+    color: var(--color-brand);
+  }
+
+  .contact__grid p {
+    margin-bottom: var(--space-6);
+    color: var(--color-text-muted);
+  }
+
+  form,
+  label {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  form {
+    gap: var(--space-4);
+  }
+
+  .contact__fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-4);
+  }
+
+  label span {
+    color: var(--color-text-muted);
+    font-size: var(--text-sm);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    border: 1px solid var(--color-line-strong);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-text);
+  }
+
+  input {
+    min-height: 2.75rem;
+    padding-inline: var(--space-3);
+  }
+
+  textarea {
+    padding: var(--space-3);
+    resize: vertical;
+  }
+
+  button,
+  .contact__channels a {
+    display: inline-flex;
+    min-height: 3rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-8);
+    width: max-content;
+    border: 0;
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-6);
+    background: var(--color-brand);
+    color: var(--color-on-brand);
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .contact__channels {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  .contact__pending {
+    padding: var(--space-4);
+    border-left: 2px solid var(--color-brand);
+    background: var(--color-surface);
+  }
+
+  .contact__trap {
+    position: absolute;
+    left: -9999px;
+  }
+
+  small {
+    display: block;
+    margin-top: var(--space-4);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 48rem) {
+    .contact__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-8);
+    }
+
+    .contact__fields {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

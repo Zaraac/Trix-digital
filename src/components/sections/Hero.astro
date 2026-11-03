@@ -1,0 +1,216 @@
+---
+import Button from "../ui/Button.astro";
+import Tag from "../ui/Tag.astro";
+---
+
+<section class="hero container" id="topo">
+  <div class="hero__copy">
+    <Tag text="Portfólio pessoal / Sites & sistemas" />
+    <h1>Seu próximo projeto<br />começa com<br /><span>uma possibilidade.</span></h1>
+    <p>
+      Eu crio sites e sistemas para transformar ideias em experiências digitais.
+      Explore os modelos e fale comigo sobre o que você precisa.
+    </p>
+    <Button href="#trabalhos" label="Conheça os modelos" />
+  </div>
+
+  <div class="hero__art" aria-label="Composição visual representando um site e um sistema">
+    <span class="hero__caption">TRIX / POSSIBILIDADES DIGITAIS</span>
+    <div class="hero__site">
+      <span>SEU SITE</span>
+      <strong>Feito para<br />ser lembrado.</strong>
+      <i></i>
+    </div>
+    <div class="hero__system">
+      <span>SEU SISTEMA</span>
+      <div>
+        <i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <small>Tudo em uma visão.</small>
+    </div>
+    <span class="hero__plus" aria-hidden="true">+</span>
+  </div>
+
+  <div class="hero__footer">
+    <span>Meu trabalho, suas possibilidades.</span>
+    <a href="#trabalhos">Continue explorando ↓</a>
+  </div>
+</section>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(24rem, 0.95fr);
+    gap: var(--space-16);
+    align-items: center;
+    padding-block: var(--section-space) var(--space-8);
+  }
+
+  h1 {
+    margin-block: var(--space-6);
+    font-size: var(--text-display);
+  }
+
+  h1 span {
+    color: var(--color-brand);
+  }
+
+  .hero__copy > p {
+    max-width: 34rem;
+    margin-bottom: var(--space-8);
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+
+  .hero__art {
+    position: relative;
+    min-height: 28rem;
+    overflow: hidden;
+    border: 1px solid var(--color-line);
+    background-color: var(--color-surface);
+    background-image: radial-gradient(var(--color-line-strong) 0.75px, transparent 0.75px);
+    background-size: 1.5rem 1.5rem;
+  }
+
+  .hero__caption,
+  .hero__site > span,
+  .hero__system > span,
+  .hero__system small {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.06em;
+  }
+
+  .hero__caption {
+    position: absolute;
+    top: var(--space-6);
+    left: var(--space-6);
+    color: var(--color-text-muted);
+  }
+
+  .hero__site,
+  .hero__system {
+    position: absolute;
+    border: 1px solid var(--color-line-strong);
+    background: var(--color-bg);
+    box-shadow: var(--shadow-raised);
+  }
+
+  .hero__site {
+    top: 5.5rem;
+    right: 3.5rem;
+    left: 2rem;
+    min-height: 15rem;
+    padding: var(--space-6);
+    transform: rotate(-4deg);
+  }
+
+  .hero__site > span,
+  .hero__system > span {
+    color: var(--color-brand);
+  }
+
+  .hero__site strong {
+    display: block;
+    margin-top: var(--space-6);
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    line-height: 1.05;
+  }
+
+  .hero__site i {
+    display: block;
+    width: 6rem;
+    height: 0.25rem;
+    margin-top: var(--space-8);
+    background: var(--color-brand);
+  }
+
+  .hero__system {
+    right: 1.5rem;
+    bottom: 3.5rem;
+    width: 15rem;
+    padding: var(--space-5, 1.25rem);
+    transform: rotate(4deg);
+  }
+
+  .hero__system > div {
+    display: flex;
+    height: 5rem;
+    align-items: end;
+    gap: var(--space-3);
+    margin-block: var(--space-4);
+  }
+
+  .hero__system i {
+    flex: 1;
+    height: 35%;
+    background: var(--color-brand);
+  }
+
+  .hero__system i:nth-child(2),
+  .hero__system i:nth-child(4) {
+    height: 70%;
+  }
+
+  .hero__system i:nth-child(3) {
+    height: 95%;
+  }
+
+  .hero__system small {
+    color: var(--color-text-muted);
+  }
+
+  .hero__plus {
+    position: absolute;
+    right: var(--space-4);
+    bottom: var(--space-3);
+    color: var(--color-accent);
+    font-family: var(--font-mono);
+    font-size: var(--text-xl);
+  }
+
+  .hero__footer {
+    display: flex;
+    grid-column: 1 / -1;
+    justify-content: space-between;
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-line);
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .hero__footer a {
+    color: var(--color-text);
+    text-decoration: none;
+  }
+
+  @media (max-width: 56rem) {
+    .hero {
+      grid-template-columns: 1fr;
+      gap: var(--space-12);
+    }
+  }
+
+  @media (max-width: 36rem) {
+    .hero__art {
+      min-height: 23rem;
+    }
+
+    .hero__site {
+      right: 2rem;
+      min-height: 13rem;
+    }
+
+    .hero__system {
+      width: 12rem;
+    }
+
+    .hero__footer {
+      gap: var(--space-4);
+    }
+  }
+</style>

@@ -1,0 +1,52 @@
+<button class="theme-toggle" type="button" aria-label="Alternar tema" aria-pressed="false">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 3a9 9 0 1 0 0 18V3Z"></path>
+    <path d="M12 3a9 9 0 0 1 0 18"></path>
+  </svg>
+</button>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>(".theme-toggle");
+  const root = document.documentElement;
+
+  const updateState = () => {
+    button?.setAttribute("aria-pressed", String(root.dataset.theme === "light"));
+  };
+
+  button?.addEventListener("click", () => {
+    const nextTheme = root.dataset.theme === "light" ? "dark" : "light";
+    root.dataset.theme = nextTheme;
+    try {
+      localStorage.setItem("trix-theme", nextTheme);
+    } catch {}
+    updateState();
+  });
+
+  updateState();
+</script>
+
+<style>
+  .theme-toggle {
+    display: grid;
+    width: 2.75rem;
+    height: 2.75rem;
+    place-items: center;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: border-color var(--duration-fast) var(--ease-standard);
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--color-brand);
+  }
+
+  svg {
+    width: 1.25rem;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+  }
+</style>
