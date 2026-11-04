@@ -49,6 +49,7 @@ import { withBase } from "../../utils/url";
     background: color-mix(in srgb, var(--color-bg) 95%, transparent);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    transition: box-shadow var(--duration-medium) var(--ease-standard);
   }
 
   .header__inner {
@@ -91,11 +92,18 @@ import { withBase } from "../../utils/url";
     color: var(--color-text-muted);
     font-size: var(--text-sm);
     text-decoration: none;
-    transition: color var(--duration-fast) var(--ease-standard);
+    background-image: linear-gradient(currentColor, currentColor);
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 0% 1px;
+    transition:
+      color var(--duration-fast) var(--ease-standard),
+      background-size var(--duration-small) var(--ease-standard);
   }
 
-  .header__nav a:hover {
+  .header__nav a:is(:hover, :focus-visible) {
     color: var(--color-brand);
+    background-size: 100% 1px;
   }
 
   .header__actions {
@@ -128,11 +136,20 @@ import { withBase } from "../../utils/url";
 
   .header__contact svg {
     width: 1rem;
+    transition: transform var(--duration-small) var(--ease-out);
     flex: 0 0 auto;
     color: var(--color-brand);
     fill: none;
     stroke: currentColor;
     stroke-width: 1.5;
+  }
+
+  .header__contact:is(:hover, :focus-visible) svg {
+    transform: translate(2px, -2px);
+  }
+
+  .header[data-scrolled] {
+    box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 25%);
   }
 
   @media (max-width: 48rem) {
@@ -156,3 +173,10 @@ import { withBase } from "../../utils/url";
     }
   }
 </style>
+
+<script>
+  const header = document.querySelector<HTMLElement>(".header");
+  const onScroll = () => header?.toggleAttribute("data-scrolled", window.scrollY > 8);
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+</script>

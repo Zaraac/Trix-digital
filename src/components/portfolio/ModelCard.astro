@@ -54,6 +54,11 @@ const { entry, index, featured = false } = Astro.props;
     gap: var(--space-6);
     color: inherit;
     text-decoration: none;
+    transition: transform var(--duration-medium) var(--ease-out);
+  }
+
+  .model-card__link:is(:hover, :focus-visible) {
+    transform: translateY(-4px);
   }
 
   .model-card__visual {
@@ -73,12 +78,12 @@ const { entry, index, featured = false } = Astro.props;
     transition: transform 300ms var(--ease-standard);
   }
 
-  .model-card__link:hover .model-card__visual {
+  .model-card__link:is(:hover, :focus-visible) .model-card__visual {
     border-color: var(--color-brand);
   }
 
-  .model-card__link:hover .model-card__visual :global(img) {
-    transform: scale(1.02);
+  .model-card__link:is(:hover, :focus-visible) .model-card__visual :global(img) {
+    transform: scale(1.03);
   }
 
   .model-card__visual > span {
@@ -127,14 +132,19 @@ const { entry, index, featured = false } = Astro.props;
 
   .model-card__cta svg {
     width: 1rem;
+    transition: transform var(--duration-small) var(--ease-out);
     color: var(--color-brand);
     fill: none;
     stroke: currentColor;
     stroke-width: 1.5;
   }
 
-  .model-card__link:hover .model-card__cta {
+  .model-card__link:is(:hover, :focus-visible) .model-card__cta {
     color: var(--color-brand);
+  }
+
+  .model-card__link:is(:hover, :focus-visible) .model-card__cta svg {
+    transform: translate(3px, -3px);
   }
 
   .model-card--featured h3 {
