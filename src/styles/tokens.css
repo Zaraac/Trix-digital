@@ -67,5 +67,10 @@
   --section-space: clamp(4.5rem, 10vw, 7rem);
 
   --duration-fast: 160ms;
+  --duration-micro: 100ms;
+  --duration-small: 200ms;
+  --duration-medium: 300ms;
+  --duration-large: 500ms;
   --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }

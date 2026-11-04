@@ -104,6 +104,21 @@ const services = [
     font-size: var(--text-sm);
   }
 
+  li > span,
+  h3 {
+    transition:
+      color var(--duration-small) var(--ease-standard),
+      transform var(--duration-small) var(--ease-out);
+  }
+
+  li:hover h3 {
+    color: var(--color-brand);
+  }
+
+  li:hover > span {
+    transform: translateX(0.25rem);
+  }
+
   @media (max-width: 48rem) {
     .services__inner {
       grid-template-columns: 1fr;

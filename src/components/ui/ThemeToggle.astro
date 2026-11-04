@@ -52,7 +52,12 @@
     cursor: pointer;
     transition:
       border-color var(--duration-fast) var(--ease-standard),
-      color var(--duration-fast) var(--ease-standard);
+      color var(--duration-fast) var(--ease-standard),
+      transform var(--duration-micro) var(--ease-standard);
+  }
+
+  .theme-toggle:active {
+    transform: scale(0.94);
   }
 
   .theme-toggle:hover {
@@ -68,15 +73,26 @@
     stroke-width: 1.5;
   }
 
+  /* Os dois ícones ocupam o mesmo espaço; a troca é um giro com fade. */
+  svg {
+    grid-area: 1 / 1;
+    transition:
+      opacity var(--duration-small) var(--ease-standard),
+      transform var(--duration-medium) var(--ease-out);
+  }
+
   .theme-toggle__moon {
-    display: none;
+    opacity: 0;
+    transform: rotate(-90deg) scale(0.6);
   }
 
   :global([data-theme="light"]) .theme-toggle__sun {
-    display: none;
+    opacity: 0;
+    transform: rotate(90deg) scale(0.6);
   }
 
   :global([data-theme="light"]) .theme-toggle__moon {
-    display: block;
+    opacity: 1;
+    transform: none;
   }
 </style>

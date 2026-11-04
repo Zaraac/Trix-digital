@@ -275,12 +275,30 @@ const isDev = import.meta.env.DEV;
     font-weight: 600;
     text-decoration: none;
     cursor: pointer;
-    transition: box-shadow var(--duration-fast) var(--ease-standard);
+    transition:
+      box-shadow var(--duration-fast) var(--ease-standard),
+      transform var(--duration-micro) var(--ease-standard);
   }
 
   .contact__submit:hover,
   .contact__channels a:hover {
     box-shadow: var(--shadow-brand);
+  }
+
+  .contact__submit:active,
+  .contact__channels a:active {
+    transform: scale(0.98);
+  }
+
+  .contact__submit > span:last-child,
+  .contact__channels a > span:last-child {
+    display: inline-block;
+    transition: translate var(--duration-small) var(--ease-out);
+  }
+
+  .contact__submit:hover > span:last-child,
+  .contact__channels a:hover > span:last-child {
+    translate: 2px -2px;
   }
 
   .contact__submit:disabled {
@@ -290,6 +308,17 @@ const isDev = import.meta.env.DEV;
 
   .contact__status:empty {
     display: none;
+  }
+
+  .contact__status:not(:empty) {
+    animation: fade-up var(--duration-medium) var(--ease-out) both;
+  }
+
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      translate: 0 0.5rem;
+    }
   }
 
   .contact__status {

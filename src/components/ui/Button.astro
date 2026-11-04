@@ -52,7 +52,12 @@ const classes = ["button", `button--${variant}`, className].filter(Boolean);
       color var(--duration-fast) var(--ease-standard),
       background var(--duration-fast) var(--ease-standard),
       border-color var(--duration-fast) var(--ease-standard),
-      box-shadow var(--duration-fast) var(--ease-standard);
+      box-shadow var(--duration-fast) var(--ease-standard),
+      transform var(--duration-micro) var(--ease-standard);
+  }
+
+  .button:active {
+    transform: scale(0.98);
   }
 
   .button--primary {
@@ -89,10 +94,15 @@ const classes = ["button", `button--${variant}`, className].filter(Boolean);
   svg {
     width: 1.125rem;
     flex: 0 0 auto;
+    transition: transform var(--duration-small) var(--ease-out);
     fill: none;
     stroke: currentColor;
     stroke-linecap: square;
     stroke-linejoin: miter;
     stroke-width: 1.5;
+  }
+
+  .button:is(:hover, :focus-visible) svg {
+    transform: translate(2px, -2px);
   }
 </style>
